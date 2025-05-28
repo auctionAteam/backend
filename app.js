@@ -12,8 +12,8 @@ const { StatusCodes } = require('http-status-codes');
 app.use(cors());
 app.use(express.json());
 
-// const { swaggerUi, specs } = require("./swagger/swagger")
-// app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs))
+const { swaggerUi, specs } = require("./swagger/swagger")
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs))
 
 app.use(function(req, res) {
     res.status(StatusCodes.NOT_FOUND).end();
