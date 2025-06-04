@@ -233,21 +233,14 @@
  *                     type: string
  *                     example: "예기치 않은 오류가 발생했습니다."
  * 
- *   /users/{state}:
+ *   /users/item:
  *     get:
  *       tags:
  *         - Users
  *       summary: 마이페이지에서 입찰전, 입찰중, 입찰후 등의 상태에 따른 물건의 정보 조회
  *       description: > 
  *                  마이페이지에서 필터를 거쳐서 경매 물건을 조회하여 보여줍니다. <br>
- *       parameters:
- *         - name: state
- *           in: path
- *           required: true
- *           description: 상태를 enum의 형식으로 작성
- *           schema:
- *             type: string
- *             enum: [active, sold, closed]
+ *                  body에 state가 없으면 전부다 보여줍니다.
  *       requestBody:
  *         description: 
  *         required: true
@@ -259,6 +252,15 @@
  *                 userid:
  *                   type: string
  *                   example: "user123"
+ *                 state:
+ *                   type: string
+ *                   enum: [active, sold, closed]
+ *                 limit:
+ *                   type: integer
+ *                   example: "3"
+ *                 currentPage:
+ *                   type: integer
+ *                   example: "3"
  *       responses:
  *         '200':
  *           description: >

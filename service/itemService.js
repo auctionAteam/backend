@@ -1,42 +1,26 @@
 const pool = require("../db/mariadb");
 const crypto = require("crypto");
+const {executeQuery} = require("../util/executeQuery");
 
-const FindAllItem = async (limit, currentPage) => {
+const findAllItem = async (limit, currentPage) => {
     const offset = limit * (currentPage - 1 );
     const values = [parseInt(limit), offset]
 
     const sql = `SELECT img, name, startTime, startPrice, priceUnit FROM auction LIMIT ? OFFSET ?`;
-
-    const connection = await pool.getConnection();
-    try {
-        const [results] = await connection.query(sql, values);
-        return results;
-    } catch (error) {
-        throw error;
-    } finally {
-        connection.release();
-    }
+    return await executeQuery(sql,values);
 };
 
-const FindFilterItem = async (state ,limit, currentPage) => {
+const findFilterItem = async (state ,limit, currentPage) => {
     const offset = limit * (currentPage - 1 );
     const values = [state,parseInt(limit), offset]
 
     const sql = `SELECT img, name, startTime, startPrice, priceUnit FROM auction WHERE state = ? LIMIT ? OFFSET ?`;
-
-    const connection = await pool.getConnection();
-    try {
-        const [results] = await connection.query(sql, values);
-        return results;
-    } catch (error) {
-        throw error;
-    } finally {
-        connection.release();
-    }
+    return await executeQuery(sql,values);
 };
 
-const FindStateByItemId = async (itemId) => {
+const findStateByItemId = async (itemId) => {
     const sql = `SELECT state FROM auction WHERE itemId = ?`;
+
     const connection = await pool.getConnection();
     try {
         const [results] = await connection.query(sql, itemId);
@@ -48,45 +32,50 @@ const FindStateByItemId = async (itemId) => {
     }
 };
 
+const findItemInfoByItemId = async (itemId, limit, currentPage) => {
+    const offset = limit * (currentPage - 1 );
+    const values = [itemId,parseInt(limit), offset]
+
+    const sql = `SELECT img, name, startTime, startPrice, priceUnit,state FROM auction WHERE id = ? LIMIT ? OFFSET ?`;
+    
+    return await executeQuery(sql,values);
+};
+
+const findFilterItemInfoByItemId = async (itemId, state ,limit, currentPage) => {
+    const offset = limit * (currentPage - 1 );
+    const values = [itemId, state ,parseInt(limit), offset]
+
+    const sql = `SELECT img, name, startTime, startPrice, priceUnit,state FROM auction WHERE id = ? AND state = ? LIMIT ? OFFSET ?`;
+
+    return await executeQuery(sql,values);
+};
+
 const likeItem = async (itemId, userId) => {
     const sql = `INSERT INTO item (itemId, userId) VALUES (?, ?)`;
     const values = [itemId, userId];
-    const connection = await pool.getConnection();
-    try {
-        const [results] = await connection.query(sql, values);
-        return results;
-    } catch (error) {
-        throw error;
-    } finally {
-        connection.release();
-    }
+
+    return await executeQuery(sql,values);
 };
 
 const addItem = async (userId, name, startTime,  startPrice, priceUnit, size, infomation) => {
     const sql = "INSERT INTO auction (userId, name, startTime,  startPrice, priceUnit, size, infomation) VALUES (?, ?, ?, ?, ?, ?, ?)";
     const values = [userId, name, startTime,  startPrice, priceUnit, size, infomation];
-    const connection = await pool.getConnection();
-    try {
-        const [results] = await connection.query(sql, values);
-        return results;
-    } catch (error) {
-        throw error;
-    } finally {
-        connection.release();
-    }
+
+    return await executeQuery(sql,values);
 };
 
 const getItem = async (itemId) => {
     const sql = "SELECT * FROM auction WHERE id=?";
-    const connection = await pool.getConnection();
-    try {
-        const [results] = await connection.query(sql, itemId);
-        return results;
-    } catch (error) {
-        throw error;
-    } finally {
-        connection.release();
-    }
+    return await executeQuery(sql,itemId);
 }
 
-module.exports = { FindAllItem, addItem, FindFilterItem, getItem, likeItem}
+module.exports = { 
+    findAllItem, 
+    addItem, 
+    findFilterItem, 
+    getItem, 
+    likeItem,
+    findStateByItemId,
+    findItemInfoByItemId,
+    findFilterItemInfoByItemId
+};

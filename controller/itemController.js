@@ -9,27 +9,29 @@ dotenv.config();
 
 const allItem = async (req, res) => {
     let allItemRes = {};
+
     const {limit, currentPage} = req.body;
     const state = req.body.state || 0;
-    let filterresults = {};
-    let itemresults = {};
+
+    let results = {};
+
     try {
+        let totalCount;
         if(state){
-            filterresults = await itemService.FindFilterItem(state,limit, currentPage);
-            if(!filterresults.length) {
-                return res.status(StatusCodes.NOT_FOUND).json({ message : "필터링된 물건이 없습니다." });
-            }
-            allItemRes.items = filterresults;
+            results = await itemService.findFilterItem(state, limit, currentPage);
+            [totalCount] = await utilPage.countFilterItem(state);
+            allItemRes.items = results;
         }
         else {
-            itemresults = await itemService.FindAllItem(limit, currentPage);
-            if(!itemresults.length) {
-                return res.status(StatusCodes.NOT_FOUND).json({ message : "모든 물건이 없습니다." });
-            }
-            allItemRes.items = itemresults;
+            results = await itemService.findAllItem(limit, currentPage);
+            [totalCount] = await utilPage.countAllItem();
+            allItemRes.items = results;
         }
 
-        const pagenation = await utilPage.pagenation(currentPage);
+        if (!allItemRes.items.length) {
+            return res.status(StatusCodes.NOT_FOUND).json({ message: state ? "필터링된 관심 물건이 없습니다." : "모든 관심 물건이 없습니다." });
+        }
+        const pagenation = await utilPage.pagenation(currentPage, limit, totalCount.count);
         allItemRes.pagenation = pagenation;
 
         return res.status(StatusCodes.OK).json(allItemRes);
@@ -55,7 +57,7 @@ const detailItem = async (req, res) => {
     const {itemId} = req.params;
     try {
         const results = await itemService.getItem(itemId);
-        return res.status(StatusCodes.CREATED).json(results);
+        return res.status(StatusCodes.OK).json(results);
     } catch(err) {
         console.log(err)
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message : "서버에서 오류가 발생했습니다. 관리자에게 문의해주세요." });
@@ -67,6 +69,9 @@ const likeItem = async (req, res) => {
     const {email} = req.body;
     try {
         const userId = await userService.findUserIdByEmail(email);
+        if(!userId){
+            return res.status(StatusCodes.NOT_FOUND).json({ message : "이메일을 확인하세요"});
+        }
         const results = await itemService.likeItem(itemId,userId);
         return res.status(StatusCodes.CREATED).json({ message : "성공적으로 관심 물건이 등록되었습니다."});
     } catch(err) {

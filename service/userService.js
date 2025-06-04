@@ -1,5 +1,7 @@
 const pool = require("../db/mariadb");
 const crypto = require("crypto");
+const {executeQuery} = require("../util/executeQuery");
+
 
 const joinUser = async ( email, password, name, phoneNum, address) => {
     const salt = crypto.randomBytes(10).toString('base64');
@@ -7,30 +9,12 @@ const joinUser = async ( email, password, name, phoneNum, address) => {
 
     const sql = `INSERT INTO users (name, email, password, phoneNum, address, salt) VALUES (?, ?, ?, ?, ?, ?)`;
     const values = [name, email, hashPassword, phoneNum, address, salt];
-    console.log(values);
-    
-    const connection = await pool.getConnection();
-    try {
-        const [results] = await connection.query(sql, values);
-        return results;
-    } catch (error) {
-        throw error;
-    } finally {
-        connection.release();
-    }
+    return await executeQuery(sql,values);
 };
 
 const findUserByEmail = async (email) => {
     const sql = `SELECT * FROM users WHERE email = ?`;
-    const connection = await pool.getConnection();
-    try {
-        const [results] = await connection.query(sql, email);
-        return results;
-    } catch (error) {
-        throw error;
-    } finally {
-        connection.release();
-    }
+    return await executeQuery(sql,email);
 };
 
 const findUserIdByEmail = async (email) => {
@@ -38,6 +22,9 @@ const findUserIdByEmail = async (email) => {
     const connection = await pool.getConnection();
     try {
         const [results] = await connection.query(sql, email);
+        if(!results.length){
+            return 0;
+        }
         return results[0].id;
     } catch (error) {
         throw error;
@@ -46,19 +33,11 @@ const findUserIdByEmail = async (email) => {
     }
 };
 
-const findUserItem = async (email, state) => {
-    const useremail = findUserByEmail(email);
-    const sql = `SELECT * FROM item WHERE userId = ? AND state= ?`;
-    const values = [useremail.id,state];
-    const connection = await pool.getConnection();
-    try {
-        const [results] = await connection.query(sql, values);
-        return results;
-    } catch (error) {
-        throw error;
-    } finally {
-        connection.release();
-    }
+const findUserItem = async (email) => {
+    const useremail = await findUserIdByEmail(email);
+    const sql = `SELECT * FROM item WHERE userId = ?`;
+    const values = [useremail];
+    return await executeQuery(sql,values);
 };
 
 module.exports = {joinUser, findUserByEmail, findUserItem, findUserIdByEmail}

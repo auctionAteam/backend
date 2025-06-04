@@ -1,15 +1,23 @@
 const pool = require("../db/mariadb");
 
-const pagenation = async (currentPage) => {
-    const sql = "SELECT found_rows()";
-    let pagenation = {}
+const pagenation = async (currentPage, limit, totalCount) => {
+    const totalPages = Math.ceil(totalCount / limit);
+    return {
+        currentPage: Number(currentPage),
+        limit: Number(limit),
+        totalCount: Number(totalCount),
+        totalPages : Number(totalPages),
+        hasNextPage: currentPage < totalPages,
+        hasPrevPage: currentPage > 1
+    };
+}
+
+const countAllItem = async () => {
+    const sql = "SELECT COUNT(*) as count FROM auction";
     const connection = await pool.getConnection();
     try {
         const [results] = await connection.query(sql);
-        pagenation.currentPage = currentPage;
-        pagenation.totalCount = results[0]["found_rows()"];
-        
-        return pagenation;
+        return results;
     } catch (error) {
         throw error;
     } finally {
@@ -17,6 +25,23 @@ const pagenation = async (currentPage) => {
     }
 }
 
+const countFilterItem = async (state) => {
+    const sql = `SELECT COUNT(*) as count FROM auction WHERE state = ?`;
+    const connection = await pool.getConnection();
+    try {
+        const [results] = await connection.query(sql,state);
+        return results;
+    } catch (error) {
+        throw error;
+    } finally {
+        connection.release();
+    }
+}
+
+
+
 module.exports = {
-    pagenation
+    pagenation,
+    countFilterItem,
+    countAllItem
 };

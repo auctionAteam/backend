@@ -7,6 +7,6 @@ const { join, login, infomation, userItem } = require('../controller/userControl
 router.post('/join', join);
 router.post('/login', login);
 router.get('/info', authenticateToken, infomation);
-router.get('/:state', authenticateToken, userItem);
+router.get('/item', authenticateToken, userItem);
 
 module.exports = router;
