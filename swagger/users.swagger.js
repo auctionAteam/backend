@@ -248,6 +248,17 @@
  *           schema:
  *             type: string
  *             enum: [active, sold, closed]
+ *       requestBody:
+ *         description: 
+ *         required: true
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 userid:
+ *                   type: string
+ *                   example: "user123"
  *       responses:
  *         '200':
  *           description: >
