@@ -3,7 +3,7 @@
  * tags:
  *   - name: Users
  *     description: 유저 관련 API
- * 
+ *
  * paths:
  *   /users/login:
  *     post:
@@ -19,7 +19,7 @@
  *             schema:
  *               type: object
  *               properties:
- *                 loginId:
+ *                 email:
  *                   type: string
  *                   example: "user123"
  *                 password:
@@ -36,9 +36,9 @@
  *                   id:
  *                     type: integer
  *                     example: 1
- *                   login_id:
+ *                   name:
  *                     type: string
- *                     example: "abc123"
+ *                     example: "홍길동"
  *                   password:
  *                     type: string
  *                     example: "WDPlF+ZUOjg+sQ=="
@@ -94,7 +94,7 @@
  *                   message:
  *                     type: string
  *                     example: "예기치 않은 오류가 발생했습니다."
- * 
+ *
  *   /users/join:
  *     post:
  *       tags:
@@ -109,9 +109,9 @@
  *             schema:
  *               type: object
  *               properties:
- *                 loginId:
+ *                 email:
  *                   type: string
- *                   example: "user123"
+ *                   example: "goob@naver.com"
  *                 password:
  *                   type: string
  *                   example: "password123!"
@@ -121,9 +121,6 @@
  *                 phoneNum:
  *                   type: string
  *                   example: "010-1234-1264"
- *                 email:
- *                   type: string
- *                   example: "goob@naver.com"
  *                 address:
  *                   type: string
  *                   example: "서울 용산구 한강대로 405"
@@ -192,7 +189,7 @@
  *             schema:
  *               type: object
  *               properties:
- *                 loginId:
+ *                 email:
  *                   type: string
  *                   example: "user123"
  *       responses:
@@ -203,7 +200,7 @@
  *               schema:
  *                 type: object
  *                 properties:
- *                   loginId:
+ *                   email:
  *                     type: string
  *                     example: "user123"
  *                   name:
@@ -232,24 +229,24 @@
  *                   message:
  *                     type: string
  *                     example: "예기치 않은 오류가 발생했습니다."
- * 
+ *
  *   /users/item:
  *     get:
  *       tags:
  *         - Users
  *       summary: 마이페이지에서 입찰전, 입찰중, 입찰후 등의 상태에 따른 물건의 정보 조회
- *       description: > 
+ *       description: >
  *                  마이페이지에서 필터를 거쳐서 경매 물건을 조회하여 보여줍니다. <br>
  *                  body에 state가 없으면 전부다 보여줍니다.
  *       requestBody:
- *         description: 
+ *         description:
  *         required: true
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
- *                 userid:
+ *                 email:
  *                   type: string
  *                   example: "user123"
  *                 state:

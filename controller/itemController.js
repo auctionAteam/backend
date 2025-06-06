@@ -8,76 +8,115 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 const allItem = async (req, res) => {
-    let allItemRes = {};
+  let allItemRes = {};
 
-    const {limit, currentPage} = req.body;
-    const state = req.body.state || 0;
+  const { limit, currentPage } = req.body;
+  const state = req.body.state || 0;
 
-    let results = {};
+  let results = {};
 
-    try {
-        let totalCount;
-        if(state){
-            results = await itemService.findFilterItem(state, limit, currentPage);
-            [totalCount] = await utilPage.countFilterItem(state);
-            allItemRes.items = results;
-        }
-        else {
-            results = await itemService.findAllItem(limit, currentPage);
-            [totalCount] = await utilPage.countAllItem();
-            allItemRes.items = results;
-        }
-
-        if (!allItemRes.items.length) {
-            return res.status(StatusCodes.NOT_FOUND).json({ message: state ? "필터링된 관심 물건이 없습니다." : "모든 관심 물건이 없습니다." });
-        }
-        const pagenation = await utilPage.pagenation(currentPage, limit, totalCount.count);
-        allItemRes.pagenation = pagenation;
-
-        return res.status(StatusCodes.OK).json(allItemRes);
-    } catch(err) {
-        console.log(err)
-        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message : "서버에서 오류가 발생했습니다. 관리자에게 문의해주세요." });
+  try {
+    let totalCount;
+    if (state) {
+      results = await itemService.findFilterItem(state, limit, currentPage);
+      [totalCount] = await utilPage.countFilterItem(state);
+      allItemRes.items = results;
+    } else {
+      results = await itemService.findAllItem(limit, currentPage);
+      [totalCount] = await utilPage.countAllItem();
+      allItemRes.items = results;
     }
-}
+
+    const pagenation = await utilPage.pagenation(
+      currentPage,
+      limit,
+      totalCount.count
+    );
+    allItemRes.pagenation = pagenation;
+
+    return res.status(StatusCodes.OK).json(allItemRes);
+  } catch (err) {
+    console.log(err);
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({
+        message: "서버에서 오류가 발생했습니다. 관리자에게 문의해주세요.",
+      });
+  }
+};
 
 const addItem = async (req, res) => {
-    const {email, name, startTime, day, startPrice, priceUnit, size, infomation } = req.body;
-    try {
-        const userId = await userService.findUserIdByEmail(email);
-        const results = await itemService.addItem(userId, name, startTime,  startPrice, priceUnit, size, infomation);
-        return res.status(StatusCodes.CREATED).json({ message : "성공적으로 물건이 등록되었습니다."});
-    } catch(err) {
-        console.log(err)
-        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message : "서버에서 오류가 발생했습니다. 관리자에게 문의해주세요." });
-    }
-}
+  const {
+    email,
+    name,
+    startTime,
+    day,
+    startPrice,
+    priceUnit,
+    size,
+    infomation,
+  } = req.body;
+  try {
+    const userId = await userService.findUserIdByEmail(email);
+    const results = await itemService.addItem(
+      userId,
+      name,
+      startTime,
+      startPrice,
+      priceUnit,
+      size,
+      infomation
+    );
+    return res
+      .status(StatusCodes.CREATED)
+      .json({ message: "성공적으로 물건이 등록되었습니다." });
+  } catch (err) {
+    console.log(err);
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({
+        message: "서버에서 오류가 발생했습니다. 관리자에게 문의해주세요.",
+      });
+  }
+};
 
 const detailItem = async (req, res) => {
-    const {itemId} = req.params;
-    try {
-        const results = await itemService.getItem(itemId);
-        return res.status(StatusCodes.OK).json(results);
-    } catch(err) {
-        console.log(err)
-        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message : "서버에서 오류가 발생했습니다. 관리자에게 문의해주세요." });
-    }
-}
+  const { itemId } = req.params;
+  try {
+    const results = await itemService.getItem(itemId);
+    return res.status(StatusCodes.OK).json(results);
+  } catch (err) {
+    console.log(err);
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({
+        message: "서버에서 오류가 발생했습니다. 관리자에게 문의해주세요.",
+      });
+  }
+};
 
 const likeItem = async (req, res) => {
-    const {itemId} = req.params;
-    const {email} = req.body;
-    try {
-        const userId = await userService.findUserIdByEmail(email);
-        if(!userId){
-            return res.status(StatusCodes.NOT_FOUND).json({ message : "이메일을 확인하세요"});
-        }
-        const results = await itemService.likeItem(itemId,userId);
-        return res.status(StatusCodes.CREATED).json({ message : "성공적으로 관심 물건이 등록되었습니다."});
-    } catch(err) {
-        console.log(err)
-        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message : "서버에서 오류가 발생했습니다. 관리자에게 문의해주세요." });
+  const { itemId } = req.params;
+  const { email } = req.body;
+  try {
+    const userId = await userService.findUserIdByEmail(email);
+    if (!userId) {
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ message: "이메일을 확인하세요" });
     }
-}
+    const results = await itemService.likeItem(itemId, userId);
+    return res
+      .status(StatusCodes.CREATED)
+      .json({ message: "성공적으로 관심 물건이 등록되었습니다." });
+  } catch (err) {
+    console.log(err);
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({
+        message: "서버에서 오류가 발생했습니다. 관리자에게 문의해주세요.",
+      });
+  }
+};
 
-module.exports = { allItem, addItem, detailItem, likeItem};
+module.exports = { allItem, addItem, detailItem, likeItem };
