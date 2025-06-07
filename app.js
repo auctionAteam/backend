@@ -15,10 +15,12 @@ app.use(express.json());
 const usersRouter = require("./routes/users");
 const itemRouter = require("./routes/item");
 const auctionRouter = require("./routes/auction");
+const searchRouter = require("./routes/search");
 
 app.use("/users", usersRouter);
 app.use("/items", itemRouter);
 app.use("/auction", auctionRouter);
+app.use("/search", searchRouter);
 
 
 const { swaggerUi, specs } = require("./swagger/swagger");

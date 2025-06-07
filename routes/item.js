@@ -2,18 +2,16 @@ const express = require('express');
 const router = express.Router();
 const { authenticateToken } = require('../middleware/authMiddleware');
 
-const { allItem, addItem, detailItem, likeItem, searchItem} = require('../controller/itemController');
+const { allItem, addItem, detailItem, likeItem} = require('../controller/itemController');
 
 router.route('/')
     .get(allItem)
-    .post(addItem);
+    .post(authenticateToken,addItem);
 
 router.route('/:itemId')
     .get(detailItem)
     .post(authenticateToken, likeItem);
 
-router.route('/search/:name')
-    .get(searchItem);
 
     // 이미지 아직 안됨
 

@@ -12,8 +12,6 @@ const allItem = async (req, res) => {
   const { limit, currentPage } = req.query;
   const state = req.body.state || 0;
 
-  let results = {};
-
   try {
     let totalCount;
     if (state) {
@@ -87,6 +85,7 @@ const addItem = async (req, res) => {
 
 const detailItem = async (req, res) => {
   const { itemId } = req.params;
+  console.log("2");
   try {
     const results = await itemService.getItem(itemId);
     return res.status(StatusCodes.OK).json(results);
@@ -124,19 +123,5 @@ const likeItem = async (req, res) => {
   }
 };
 
-const searchItem = async (req, res) => {
-  const { name } = req.params;
-  try {
-    // 이름 검색 함수
-    return;
-  } catch (err) {
-    console.log(err);
-    return res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({
-        message: "서버에서 오류가 발생했습니다. 관리자에게 문의해주세요.",
-      });
-  }
-};
 
-module.exports = { allItem, addItem, detailItem, likeItem , searchItem };
+module.exports = { allItem, addItem, detailItem, likeItem  };

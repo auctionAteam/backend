@@ -6,7 +6,7 @@ const {startAuction, bidAuction, closedAuction} = require('../controller/auction
 
 router.route("/:itemId")
     .post(startAuction)
-    .put(bidAuction)
+    .put(authenticateToken,bidAuction)
     .delete(closedAuction);
 
 module.exports = router;

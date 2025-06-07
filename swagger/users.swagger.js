@@ -181,6 +181,14 @@
  *         - Users
  *       summary: 내 정보 조회
  *       description: 마이 페이지의 내 정보 조회
+ *       parameters:
+ *         - name: authorization
+ *           in: header
+ *           required: true
+ *           description: 로그인 회원의 authorization
+ *           schema:
+ *             type: string
+ *             example: "eyJhbGciOiJIUzI1NiIsInR5cCI6I..."
  *       requestBody:
  *         description: 유저 아이디
  *         required: true
@@ -238,26 +246,39 @@
  *       description: >
  *                  마이페이지에서 필터를 거쳐서 경매 물건을 조회하여 보여줍니다. <br>
  *                  body에 state가 없으면 전부다 보여줍니다.
+ *       parameters:
+ *         - name: limit
+ *           in: query
+ *           required: true
+ *           description: 한 페이지에 보여줄 갯수
+ *           schema:
+ *             type: integer
+ *             example: "10"
+ *         - name: currentpage
+ *           in: query
+ *           required: true
+ *           description: 현재 페이지
+ *           schema:
+ *             type: integer
+ *             example: "2"
+ *         - name: authorization
+ *           in: header
+ *           required: true
+ *           description: 로그인 회원의 authorization
+ *           schema:
+ *             type: string
+ *             example: "eyJhbGciOiJIUzI1NiIsInR5cCI6I..."
  *       requestBody:
  *         description:
- *         required: true
+ *         required: false
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
- *                 email:
- *                   type: string
- *                   example: "user123"
  *                 state:
  *                   type: string
- *                   enum: [active, sold, closed]
- *                 limit:
- *                   type: integer
- *                   example: "3"
- *                 currentPage:
- *                   type: integer
- *                   example: "3"
+ *                   enum: [before,auction,closed]
  *       responses:
  *         '200':
  *           description: >
