@@ -16,7 +16,8 @@
  *       summary: 메인 페이지 물건 전체 조회
  *       description: > 
  *                  메인 페이지에서 모든 경매 물건을 조회하여 보여줍니다. <br>
- *                  필터를 사용시 /items/{state}
+ *                  필터를 사용시 바디에 state를 추가해주세요 <br>
+ *                  before : 경매 전 ,auction : 경매 중,closed : 경매 완료
  *       requestBody:
  *         description: 
  *         required: true
@@ -93,9 +94,10 @@
  *       summary: 물건 등록
  *       description: > 
  *                  물품 등록 페이지에서 등록하기 <br>
- *                  day에 1주일,2주일등을 넣어서 endTime을 계산 <br>
+ *                  day에 몇일르 작성 1,2,3 등등 <br>
  *                  아직 img 추가 안됨 <br>
- *                  state는 자동으로 before로 저장
+ *                  state는 자동으로 before로 저장 <br>
+ *                  startTime은 물건을 등록한 날에서 day를 더한 값으로 삽입
  *       requestBody:
  *         description: 
  *         required: true
@@ -110,12 +112,9 @@
  *                 name:
  *                   type: string
  *                   example: "도자기"
- *                 startTime:
- *                   type: timestamp
- *                   example: "2025-06-01"
  *                 day:
  *                   type: integer
- *                   example: 604800
+ *                   example: 3
  *                 startPrice:
  *                   type: interger
  *                   example: 1000000
@@ -163,7 +162,7 @@
  *                     example: "고려시대에 만들어진 도자기이다."
  *                   state:
  *                     type: string
- *                     enum: [active, sold, closed]
+ *                     enum: [before,auction, closed]
  *         '400':
  *           description: "데이터 누락 또는 형식 오류"
  *           content:

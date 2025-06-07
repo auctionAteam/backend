@@ -79,6 +79,16 @@ const getItem = async (itemId) => {
     return await executeQuery(sql,itemId);
 }
 
+const findStartPriceByItemId = async (itemId) => {
+    const sql = "SELECT startPrice FROM auction WHERE id=?";
+    return await executeQuery(sql,itemId);
+}
+
+const findStartTimeByItemId = async (itemId) => {
+    const sql = "SELECT starttime FROM auction WHERE id=?";
+    return await executeQuery(sql,itemId);
+}
+
 module.exports = { 
     findAllItem, 
     addItem, 
@@ -87,5 +97,7 @@ module.exports = {
     likeItem,
     findStateByItemId,
     findItemInfoByItemId,
-    findFilterItemInfoByItemId
+    findFilterItemInfoByItemId,
+    findStartPriceByItemId,
+    findStartTimeByItemId
 };
