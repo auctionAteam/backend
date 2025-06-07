@@ -70,15 +70,21 @@
  *       summary: 2. 입찰 API
  *       description: > 
  *                  2. 입찰을 누를때마다 auctioning 테이블의 데이터에 계속 수정 <br>
- * 
  *       parameters:
- *         - name: state
+ *         - name: itmeid
  *           in: path
  *           required: true
  *           description: 경매 아이템의 아이디 ( itmeId )
  *           schema:
  *             type: integer
  *             example: 1
+ *         - name: authorization
+ *           in: header
+ *           required: true
+ *           description: 로그인 회원의 authorization
+ *           schema:
+ *             type: string
+ *             example: "eyJhbGciOiJIUzI1NiIsInR5cCI6I..."
  *       requestBody:
  *         description: 
  *         required: true

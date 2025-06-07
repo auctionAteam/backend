@@ -38,10 +38,24 @@ const countFilterItem = async (state) => {
     }
 }
 
+const countSearchItem = async (name) => {
+    const sql = `SELECT COUNT(*) as count FROM auction WHERE name LIKE '%`+name+`%'`;
+    const connection = await pool.getConnection();
+    try {
+        const [results] = await connection.query(sql);
+        return results;
+    } catch (error) {
+        throw error;
+    } finally {
+        connection.release();
+    }
+}
+
 
 
 module.exports = {
     pagenation,
     countFilterItem,
-    countAllItem
+    countAllItem,
+    countSearchItem
 };

@@ -89,15 +89,29 @@ const findStartTimeByItemId = async (itemId) => {
     return await executeQuery(sql,itemId);
 }
 
+const searchItem = async (name, limit, currentPage) => {
+    const offset = limit * (currentPage - 1 );
+    const values = [parseInt(limit), offset]
+
+    const sql = `SELECT img, name, startTime, startPrice, priceUnit,state FROM auction WHERE name LIKE "%`+name+`%" LIMIT ? OFFSET ?`;
+    
+    return await executeQuery(sql,values);
+};
+
+
 module.exports = { 
-    findAllItem, 
+    findAllItem,
+    findFilterItem,
+
     addItem, 
-    findFilterItem, 
     getItem, 
     likeItem,
+
     findStateByItemId,
     findItemInfoByItemId,
     findFilterItemInfoByItemId,
     findStartPriceByItemId,
-    findStartTimeByItemId
+    findStartTimeByItemId,
+
+    searchItem
 };

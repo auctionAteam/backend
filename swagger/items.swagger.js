@@ -18,20 +18,32 @@
  *                  메인 페이지에서 모든 경매 물건을 조회하여 보여줍니다. <br>
  *                  필터를 사용시 바디에 state를 추가해주세요 <br>
  *                  before : 경매 전 ,auction : 경매 중,closed : 경매 완료
+ *       parameters:
+ *         - name: limit
+ *           in: query
+ *           required: true
+ *           description: 한 페이지에 보여줄 갯수
+ *           schema:
+ *             type: integer
+ *             example: "10"
+ *         - name: currentpage
+ *           in: query
+ *           required: true
+ *           description: 현재 페이지
+ *           schema:
+ *             type: integer
+ *             example: "2"
  *       requestBody:
  *         description: 
- *         required: true
+ *         required: false
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
- *                 limit:
- *                   type: integer
- *                   example: "3"
- *                 currentPage:
- *                   type: integer
- *                   example: "3"
+ *                 state:
+ *                   type: string
+ *                   example: "before"
  *       responses:
  *         '200':
  *           description: >
@@ -98,6 +110,14 @@
  *                  아직 img 추가 안됨 <br>
  *                  state는 자동으로 before로 저장 <br>
  *                  startTime은 물건을 등록한 날에서 day를 더한 값으로 삽입
+ *       parameters:
+ *         - name: authorization
+ *           in: header
+ *           required: true
+ *           description: 로그인 회원의 authorization
+ *           schema:
+ *             type: string
+ *             example: "eyJhbGciOiJIUzI1NiIsInR5cCI6I..."
  *       requestBody:
  *         description: 
  *         required: true
@@ -289,6 +309,13 @@
  *           schema:
  *             type: integer
  *             example: 1
+ *         - name: authorization
+ *           in: header
+ *           required: true
+ *           description: 로그인 회원의 authorization
+ *           schema:
+ *             type: string
+ *             example: "eyJhbGciOiJIUzI1NiIsInR5cCI6I..."
  *       responses:
  *         '200':
  *           description: >
