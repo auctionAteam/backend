@@ -6,7 +6,11 @@ const findAllItem = async (limit, currentPage) => {
     const offset = limit * (currentPage - 1 );
     const values = [parseInt(limit), offset]
 
-    const sql = `SELECT img, name, startTime, startPrice, priceUnit FROM auction LIMIT ? OFFSET ?`;
+    const sql = `SELECT 
+                    auc.id, users.name ,auc.img, auc.name, auc.startTime, auc.startPrice, auc.priceUnit FROM auction AS auc 
+                    INNER JOIN users ON auc.userId = users.id 
+                    LIMIT 10 OFFSET 0 ;
+                `;
     return await executeQuery(sql,values);
 };
 
@@ -14,7 +18,13 @@ const findFilterItem = async (state ,limit, currentPage) => {
     const offset = limit * (currentPage - 1 );
     const values = [state,parseInt(limit), offset]
 
-    const sql = `SELECT img, name, startTime, startPrice, priceUnit FROM auction WHERE state = ? LIMIT ? OFFSET ?`;
+    const sql = `SELECT 
+                    auc.id, users.name ,auc.img, auc.name, auc.startTime, auc.startPrice, auc.priceUnit 
+                    FROM auction AS auc 
+                    INNER JOIN users ON auc.userId = users.id
+                    WHERE state = ? LIMIT ? OFFSET ? ;
+                `;
+    
     return await executeQuery(sql,values);
 };
 

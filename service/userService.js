@@ -41,4 +41,10 @@ const findUserItem = async (email) => {
   return await executeQuery(sql, values);
 };
 
-module.exports = { joinUser, findUserByEmail, findUserItem, findUserIdByEmail };
+const findUserNameByUserId = async (userId) => {
+  const sql = `SELECT name FROM item WHERE userId = ?`;
+  const values = [userId];
+  return await executeQuery(sql, values);
+};
+
+module.exports = { joinUser, findUserByEmail, findUserItem, findUserIdByEmail,findUserNameByUserId };

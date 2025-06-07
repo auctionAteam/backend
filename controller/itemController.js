@@ -56,6 +56,9 @@ const addItem = async (req, res) => {
     size,
     infomation,
   } = req.body;
+
+  const nowTime = new Date();
+  const auctionStartTime = nowTime + day;
   try {
     const userId = await userService.findUserIdByEmail(email);
     const results = await itemService.addItem(
