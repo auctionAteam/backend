@@ -49,7 +49,6 @@ const addItem = async (req, res) => {
   const {
     email,
     name,
-    startTime,
     day,
     startPrice,
     priceUnit,
@@ -57,14 +56,18 @@ const addItem = async (req, res) => {
     infomation,
   } = req.body;
 
-  const nowTime = new Date();
-  const auctionStartTime = nowTime + day;
+  let auctionStartTime = new Date();
+  auctionStartTime.setDate(auctionStartTime.getDay() + parseInt(day));
+  // auctionStartTime.setHours(auctionStartTime.getHours() + 9);
+  // 데이터베이스는 표준 시간이 한국으로 되어있어서 할 필요가 없다.
+  // 만약 프론트에서는 영국시간으로 되어있으면 활성화시키기
+
   try {
     const userId = await userService.findUserIdByEmail(email);
     const results = await itemService.addItem(
       userId,
       name,
-      startTime,
+      auctionStartTime,
       startPrice,
       priceUnit,
       size,

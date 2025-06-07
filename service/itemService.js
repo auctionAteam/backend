@@ -67,9 +67,9 @@ const likeItem = async (itemId, userId) => {
     return await executeQuery(sql,values);
 };
 
-const addItem = async (userId, name, startTime,  startPrice, priceUnit, size, infomation) => {
-    const sql = "INSERT INTO auction (userId, name, startTime,  startPrice, priceUnit, size, infomation) VALUES (?, ?, ?, ?, ?, ?, ?)";
-    const values = [userId, name, startTime,  startPrice, priceUnit, size, infomation];
+const addItem = async (userId, name, auctionStartTime,  startPrice, priceUnit, size, infomation) => {
+    const sql = "INSERT INTO auction (userId, name, startTime, startPrice, priceUnit, size, infomation) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    const values = [userId, name, auctionStartTime,  startPrice, priceUnit, size, infomation];
 
     return await executeQuery(sql,values);
 };
