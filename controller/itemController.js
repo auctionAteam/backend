@@ -2,7 +2,6 @@ const { StatusCodes } = require("http-status-codes");
 const itemService = require("../service/itemService");
 const userService = require("../service/userService");
 const utilPage = require("../util/pagenation");
-const { eunmState } = require("../model/enum");
 
 const dotenv = require("dotenv");
 dotenv.config();
@@ -10,7 +9,7 @@ dotenv.config();
 const allItem = async (req, res) => {
   let allItemRes = {};
 
-  const { limit, currentPage } = req.body;
+  const { limit, currentPage } = req.query;
   const state = req.body.state || 0;
 
   let results = {};
@@ -125,4 +124,19 @@ const likeItem = async (req, res) => {
   }
 };
 
-module.exports = { allItem, addItem, detailItem, likeItem };
+const searchItem = async (req, res) => {
+  const { name } = req.params;
+  try {
+    // 이름 검색 함수
+    return;
+  } catch (err) {
+    console.log(err);
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({
+        message: "서버에서 오류가 발생했습니다. 관리자에게 문의해주세요.",
+      });
+  }
+};
+
+module.exports = { allItem, addItem, detailItem, likeItem , searchItem };
