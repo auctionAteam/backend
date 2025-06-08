@@ -9,17 +9,23 @@ dotenv.config();
 const allItem = async (req, res) => {
   let allItemRes = {};
 
-  const { limit, currentPage } = req.query;
-  const state = req.body.state || 0;
+  const { limit, currentPage, name } = req.query;
+  const state = req.query.state || 0;
 
   try {
     let totalCount;
+
     if (state) {
-      results = await itemService.findFilterItem(state, limit, currentPage);
+      results = await itemService.findFilterItem(
+        name,
+        state,
+        limit,
+        currentPage
+      );
       [totalCount] = await utilPage.countFilterItem(state);
       allItemRes.items = results;
     } else {
-      results = await itemService.findAllItem(limit, currentPage);
+      results = await itemService.findAllItem(name, limit, currentPage);
       [totalCount] = await utilPage.countAllItem();
       allItemRes.items = results;
     }
@@ -34,24 +40,15 @@ const allItem = async (req, res) => {
     return res.status(StatusCodes.OK).json(allItemRes);
   } catch (err) {
     console.log(err);
-    return res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({
-        message: "서버에서 오류가 발생했습니다. 관리자에게 문의해주세요.",
-      });
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      message: "서버에서 오류가 발생했습니다. 관리자에게 문의해주세요.",
+    });
   }
 };
 
 const addItem = async (req, res) => {
-  const {
-    email,
-    name,
-    day,
-    startPrice,
-    priceUnit,
-    size,
-    infomation,
-  } = req.body;
+  const { email, name, day, startPrice, priceUnit, size, infomation } =
+    req.body;
 
   let auctionStartTime = new Date();
   auctionStartTime.setDate(auctionStartTime.getDay() + parseInt(day));
@@ -75,11 +72,9 @@ const addItem = async (req, res) => {
       .json({ message: "성공적으로 물건이 등록되었습니다." });
   } catch (err) {
     console.log(err);
-    return res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({
-        message: "서버에서 오류가 발생했습니다. 관리자에게 문의해주세요.",
-      });
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      message: "서버에서 오류가 발생했습니다. 관리자에게 문의해주세요.",
+    });
   }
 };
 
@@ -91,11 +86,9 @@ const detailItem = async (req, res) => {
     return res.status(StatusCodes.OK).json(results);
   } catch (err) {
     console.log(err);
-    return res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({
-        message: "서버에서 오류가 발생했습니다. 관리자에게 문의해주세요.",
-      });
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      message: "서버에서 오류가 발생했습니다. 관리자에게 문의해주세요.",
+    });
   }
 };
 
@@ -115,13 +108,10 @@ const likeItem = async (req, res) => {
       .json({ message: "성공적으로 관심 물건이 등록되었습니다." });
   } catch (err) {
     console.log(err);
-    return res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({
-        message: "서버에서 오류가 발생했습니다. 관리자에게 문의해주세요.",
-      });
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      message: "서버에서 오류가 발생했습니다. 관리자에게 문의해주세요.",
+    });
   }
 };
 
-
-module.exports = { allItem, addItem, detailItem, likeItem  };
+module.exports = { allItem, addItem, detailItem, likeItem };
