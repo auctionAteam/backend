@@ -1,35 +1,52 @@
 const pool = require("../db/mariadb");
-const crypto = require("crypto");
 const { executeQuery } = require("../util/executeQuery");
 
-const findAllItem = async (limit, currentPage) => {
+const findAllItem = async (name, limit, currentPage) => {
   const offset = limit * (currentPage - 1);
-  const values = [parseInt(limit), offset];
+  const values = [];
 
-  const sql = `SELECT 
-                    auc.id, users.name ,auc.img, auc.name, auc.startTime, auc.endTime, auc.startPrice, auc.priceUnit FROM auction AS auc 
-                    INNER JOIN users ON auc.userId = users.id 
-                    LIMIT 10 OFFSET 0 ;
-                `;
+  let sql = `SELECT 
+                auc.id, users.name as userName, auc.img, auc.name as itemName, 
+                auc.startTime, auc.endTime, auc.startPrice, auc.priceUnit 
+                FROM auction AS auc 
+                INNER JOIN users ON auc.userId = users.id`;
+
+  if (name && name.trim() !== "") {
+    sql += " WHERE auc.name LIKE ?";
+    values.push(`%${name.trim()}%`);
+  }
+
+  sql += " LIMIT ? OFFSET ?";
+  values.push(parseInt(limit), offset);
+
   return await executeQuery(sql, values);
 };
 
 const findFilterItem = async (name, state, limit, currentPage) => {
   const offset = limit * (currentPage - 1);
   let sql = `SELECT 
-    auc.id, users.name, auc.img, auc.name, auc.startTime, auc.endTime, auc.startPrice, auc.priceUnit 
+    auc.id, users.name as userName, auc.img, auc.name, auc.startTime, auc.endTime, auc.startPrice, auc.priceUnit 
     FROM auction AS auc 
-    INNER JOIN users ON auc.userId = users.id
-    WHERE state = ?`;
+    INNER JOIN users ON auc.userId = users.id`;
 
-  let values = [state];
+  const values = [];
+  const conditions = [];
 
-  if (name) {
-    sql += ` AND auc.name LIKE ?`;
-    values.push(`%${name}%`);
+  if (state && state.trim() !== "") {
+    conditions.push("auc.state = ?");
+    values.push(state);
   }
 
-  sql += ` LIMIT ? OFFSET ?`;
+  if (name && name.trim() !== "") {
+    conditions.push("auc.name LIKE ?");
+    values.push(`%${name.trim()}%`);
+  }
+
+  if (conditions.length > 0) {
+    sql += " WHERE " + conditions.join(" AND ");
+  }
+
+  sql += " LIMIT ? OFFSET ?";
   values.push(parseInt(limit), offset);
 
   return await executeQuery(sql, values);

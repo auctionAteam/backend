@@ -9,8 +9,7 @@ dotenv.config();
 const allItem = async (req, res) => {
   let allItemRes = {};
 
-  const { limit, currentPage, name } = req.query;
-  const state = req.query.state || 0;
+  const { limit, currentPage, name, state } = req.query;
 
   try {
     let totalCount;
@@ -22,11 +21,11 @@ const allItem = async (req, res) => {
         limit,
         currentPage
       );
-      [totalCount] = await utilPage.countFilterItem(state);
+      [totalCount] = await utilPage.countFilterItem(state, name);
       allItemRes.items = results;
     } else {
       results = await itemService.findAllItem(name, limit, currentPage);
-      [totalCount] = await utilPage.countAllItem();
+      [totalCount] = await utilPage.countAllItem(name);
       allItemRes.items = results;
     }
 
