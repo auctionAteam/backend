@@ -301,6 +301,7 @@
  *       summary: 유저가 물건을 관심 물건으로 추가한다.
  *       description: > 
  *                  버튼을 누르면 item테이블에 추가한다. <br>
+ *                  바디에 email을 넣을 필요없다. 토큰에서 가져오는 형식
  *       parameters:
  *         - name: state
  *           in: path
@@ -320,6 +321,75 @@
  *         '200':
  *           description: >
  *              관심 아이템으로 추가되었습니다. <br>
+ *           content:
+ *             application/json:
+ *               schema:
+ *                 type: array
+ *                 items:
+ *                   type: object
+ *                   properties:
+ *                     itemId:
+ *                       type: integer
+ *                       example: 1
+ *                     userId:
+ *                       type: integer
+ *                       example: 23
+ *         '400':
+ *           description: "데이터 누락 또는 형식 오류"
+ *           content:
+ *             application/json:
+ *               schema:
+ *                 type: object
+ *                 properties:
+ *                   message:
+ *                     type: string
+ *                     example: "전달 데이터를 다시 확인해주세요."
+ *         '404':
+ *           description: "해당 유저 없음"
+ *           content:
+ *             application/json:
+ *               schema:
+ *                 type: object
+ *                 properties:
+ *                   message:
+ *                     type: string
+ *                     example: "유저가 존재하지 않습니다."
+ *         '500':
+ *           description: "서버 오류"
+ *           content:
+ *             application/json:
+ *               schema:
+ *                 type: object
+ *                 properties:
+ *                   message:
+ *                     type: string
+ *                     example: "서버에서 오류가 발생했습니다. 관리자에게 문의해주세요."
+ *     delete:
+ *       tags:
+ *         - items
+ *       summary: 유저가 물건을 관심 물건으로 삭제한다.
+ *       description: > 
+ *                  버튼을 누르면 item테이블에 삭제한다. <br>
+ *                  바디에 email을 넣을 필요없다. 토큰에서 가져오는 형식ㄴ
+ *       parameters:
+ *         - name: state
+ *           in: path
+ *           required: true
+ *           description: 관심 삭제한 아이템 ID ( itemId )
+ *           schema:
+ *             type: integer
+ *             example: 1
+ *         - name: authorization
+ *           in: header
+ *           required: true
+ *           description: 로그인 회원의 authorization
+ *           schema:
+ *             type: string
+ *             example: "eyJhbGciOiJIUzI1NiIsInR5cCI6I..."
+ *       responses:
+ *         '200':
+ *           description: >
+ *              관심 아이템으로 삭제되었습니다. <br>
  *           content:
  *             application/json:
  *               schema:

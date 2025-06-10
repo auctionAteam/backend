@@ -108,6 +108,13 @@ const likeItem = async (itemId, userId) => {
   return await executeQuery(sql, values);
 };
 
+const deleteLikeItem = async (itemId, userId) => {
+  const sql = `DELETE FROM item WHERE itemId = ? AND userId = ?;`;
+  const values = [itemId, userId];
+
+  return await executeQuery(sql, values);
+};
+
 const addItem = async (
   userId,
   name,
@@ -154,6 +161,7 @@ module.exports = {
   addItem,
   getItem,
   likeItem,
+  deleteLikeItem,
 
   findStateByItemId,
   findItemInfoByItemId,

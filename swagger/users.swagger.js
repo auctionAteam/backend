@@ -217,6 +217,12 @@
  *                   address:
  *                     type: string
  *                     example: "서울 용산구 한강대로 405"
+ *                   phoneNum:
+ *                     type: string
+ *                     example: "010-1111-1111"
+ *                   createdate:
+ *                     type: string
+ *                     example: "2025-05-01"
  *         '500':
  *           description: "서버 오류"
  *           content:

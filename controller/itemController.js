@@ -93,14 +93,10 @@ const detailItem = async (req, res) => {
 
 const likeItem = async (req, res) => {
   const { itemId } = req.params;
-  const { email } = req.body;
+  const { email } = req.user;
+
   try {
     const userId = await userService.findUserIdByEmail(email);
-    if (!userId) {
-      return res
-        .status(StatusCodes.NOT_FOUND)
-        .json({ message: "이메일을 확인하세요" });
-    }
     const results = await itemService.likeItem(itemId, userId);
     return res
       .status(StatusCodes.CREATED)
@@ -113,4 +109,21 @@ const likeItem = async (req, res) => {
   }
 };
 
-module.exports = { allItem, addItem, detailItem, likeItem };
+const deleteLikeItem = async (req, res) => {
+  const { itemId } = req.params;
+  const { email } = req.user;
+  try {
+    const userId = await userService.findUserIdByEmail(email);
+    const results = await itemService.deleteLikeItem(itemId, userId);
+    return res
+      .status(StatusCodes.OK)
+      .json({ message: "성공적으로 관심 물건이 삭제되었습니다." });
+  } catch (err) {
+    console.log(err);
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      message: "서버에서 오류가 발생했습니다. 관리자에게 문의해주세요.",
+    });
+  }
+};
+
+module.exports = { allItem, addItem, detailItem, likeItem,deleteLikeItem };
