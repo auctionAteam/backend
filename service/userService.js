@@ -14,7 +14,7 @@ const joinUser = async (email, password, name, phoneNum, address) => {
 };
 
 const findUserByEmail = async (email) => {
-  const sql = `SELECT email,name,phoneNum,address,createAt FROM users WHERE email = ?`;
+  const sql = `SELECT * FROM users WHERE email = ?`;
   return await executeQuery(sql, email);
 };
 
@@ -47,4 +47,10 @@ const findUserNameByUserId = async (userId) => {
   return await executeQuery(sql, values);
 };
 
-module.exports = { joinUser, findUserByEmail, findUserItem, findUserIdByEmail,findUserNameByUserId };
+module.exports = {
+  joinUser,
+  findUserByEmail,
+  findUserItem,
+  findUserIdByEmail,
+  findUserNameByUserId,
+};
