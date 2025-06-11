@@ -12,6 +12,6 @@ const {
 router.post("/join", join);
 router.post("/login", login);
 router.get("/info", authenticateToken, infomation);
-router.post("/item", authenticateToken, userItem);
+router.get("/item", authenticateToken, userItem);
 
 module.exports = router;
