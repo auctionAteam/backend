@@ -76,7 +76,7 @@ const login = async (req, res) => {
 };
 
 const infomation = async (req, res) => {
-  const { email } = req.body;
+  const { email } = req.query;
 
   try {
     const userInfo = await userService.findUserByEmail(email);

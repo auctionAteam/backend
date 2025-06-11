@@ -126,4 +126,4 @@ const deleteLikeItem = async (req, res) => {
   }
 };
 
-module.exports = { allItem, addItem, detailItem, likeItem,deleteLikeItem };
+module.exports = { allItem, addItem, detailItem, likeItem, deleteLikeItem };
